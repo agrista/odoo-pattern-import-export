@@ -105,10 +105,7 @@ class IrExportsLine(models.Model):
 
     def _inverse_name(self):
         super()._inverse_name()
-        if not self.id:
-            self.with_context(skip_check=True)._check_required_fields()
-        else:
-            self._check_required_fields()
+        self._check_required_fields()
 
     @api.constrains("name", "number_occurence", "sub_pattern_config_id")
     def _check_required_fields(self):
@@ -137,7 +134,6 @@ class IrExportsLine(models.Model):
                             )
                         )
 
-    @api.multi
     @api.depends("name")
     def _compute_related_level_field(self):
         for export_line in self:
@@ -178,7 +174,6 @@ class IrExportsLine(models.Model):
                 base_header.append(field_name)
         return COLUMN_X2M_SEPARATOR.join(base_header)
 
-    @api.multi
     def _get_header(self, use_description=False):
         """
         @return: list of str
